@@ -3,27 +3,34 @@ import { useAuth } from '../context/authContext'
 import { Link, useNavigate } from 'react-router-dom'
 
 const Navbar = () => {
-    const { user, setUser } = useAuth()
-    const navigate = useNavigate()
-    const [ navbarStatus, setNavbarStatus ] = useState(false)
+	const { user, setUser } = useAuth()
+	const navigate = useNavigate()
+	const [navbarStatus, setNavbarStatus] = useState(false)
 
-    const clickMenu = () =>{
-        setNavbarStatus(!navbarStatus)
-    }
-    const handleLogout = () =>{
-        setUser(undefined)
-        navigate('/login')
-    }
-	
+	const clickMenu = () => {
+		setNavbarStatus(!navbarStatus)
+	}
+	const handleLogout = () => {
+		setUser(undefined)
+		navigate('/login')
+	}
+
 	return (
 		<nav className='fixed top-0 left-0 right-0 flex items-center justify-between flex-wrap bg-white px-6 py-4 shadow z-10'>
 			<div className='flex items-center flex-shrink-0 mr-6'>
 				<span className='font-semibold text-xl tracking-tight'>
 					Hola, {user.nombre}
 				</span>
+
+				<span className='px-2 py-0 ml-2 text-base rounded-full text-indigo-500 border border-indigo-500 '>
+					{user.rol}
+				</span>
 			</div>
 			<div className='block lg:hidden'>
-				<button onClick={clickMenu} className='flex items-center px-3 py-2 border rounded text-gray-600 border-gray-600 hover:text-gray-800 hover:border-gray-800'>
+				<button
+					onClick={clickMenu}
+					className='flex items-center px-3 py-2 border rounded text-gray-600 border-gray-600 hover:text-gray-800 hover:border-gray-800'
+				>
 					<svg
 						className='fill-current h-3 w-3'
 						viewBox='0 0 20 20'
@@ -34,11 +41,36 @@ const Navbar = () => {
 					</svg>
 				</button>
 			</div>
-			<div className={`w-full ${navbarStatus ? 'fixed' : 'hidden'} top-16 bg-white right-0 left-0 flex-grow lg:flex lg:items-center lg:w-auto z-10`}>
+			<div
+				className={`w-full ${
+					navbarStatus ? 'fixed' : 'hidden'
+				} top-16 bg-white right-0 left-0 flex-grow lg:flex lg:items-center lg:w-auto z-10`}
+			>
 				<div className='text-sm lg:flex-grow mx-6'>
-                    <Link to="/" className='block mt-4 lg:inline-block lg:mt-0 text-gray-600 hover:text-gray-800 mr-4'>Crear nuevo usuario</Link>
-                    <Link to="/usuarios" className='block mt-4 lg:inline-block lg:mt-0 text-gray-600 hover:text-gray-800 mr-4'>Usuarios</Link>
-                    <Link to="/pruebas" className='block mt-4 lg:inline-block lg:mt-0 text-gray-600 hover:text-gray-800 mr-4'>Pruebas</Link>
+					<Link
+						to='/'
+						className='block mt-4 lg:inline-block lg:mt-0 text-gray-600 hover:text-gray-800 mr-4'
+					>
+						Crear nuevo usuario
+					</Link>
+					<Link
+						to='/usuarios'
+						className='block mt-4 lg:inline-block lg:mt-0 text-gray-600 hover:text-gray-800 mr-4'
+					>
+						Usuarios
+					</Link>
+					<Link
+						to='/pruebas'
+						className='block mt-4 lg:inline-block lg:mt-0 text-gray-600 hover:text-gray-800 mr-4'
+					>
+						Pruebas
+					</Link>
+					<Link
+						to='/grupos'
+						className='block mt-4 lg:inline-block lg:mt-0 text-gray-600 hover:text-gray-800 mr-4'
+					>
+						Grupos
+					</Link>
 				</div>
 				<div className='mx-6 mb-3 lg:mb-0'>
 					<button

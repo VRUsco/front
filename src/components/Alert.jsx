@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Alert = ({ titulo = "Error al probar", cuerpo = "Bro, algo pasó no sé qué pero algo pasó", color = red}) => {
+const Alert = ({ titulo = "Error al probar", cuerpo = "Bro, algo pasó no sé qué pero algo pasó", color = 'red'}) => {
 
 	return (
 		<div

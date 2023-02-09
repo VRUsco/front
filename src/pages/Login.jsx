@@ -15,14 +15,6 @@ const Login = () => {
 		e.preventDefault()
 		login(inputId.current.value, inputPassword.current.value)
 		if (user) {
-			window.localStorage.setItem('poo', 'foo')
-			window.localStorage.setItem(
-				'pl',
-				JSON.stringify({
-					p: inputId.current.value,
-					u: inputPassword.current.value,
-				})
-			)
 			navigate('/')
 		}
 	}

@@ -9,7 +9,7 @@ export default function Index() {
 		cuerpo: '',
 		color:''
 	})
-	const { createUser } = useAuth()
+	const { createUser, getTipoId, tipoid } = useAuth()
 	const form = useRef()
 	const inputNombres = useRef(null)
 	const inputApellidos = useRef(null)
@@ -30,6 +30,9 @@ export default function Index() {
 		clearTimeout(t)
 	}, [alert])
 
+	useEffect(()=>{
+		getTipoId()
+	}, [])
 
 	const handleSubmit = async e => {
 		e.preventDefault()
@@ -41,20 +44,21 @@ export default function Index() {
 			if(rol == "Usuario") return 1
 			if(rol == "Administrador") return 3
 		}
+		const saberTipoId = nombreId =>{
+			const id = tipoid.find( ({id, nombre}) => nombreId == nombre)
+			return id.id
+		}
 
 		const newUser = {
 			nombre: inputNombres.current.value,
 			apellido: inputApellidos.current.value,
 			password: inputContra.current.value,
-			tipo_identificacion: 1, //inputTipoId.current.value,
+			tipo_identificacion: saberTipoId(inputTipoId.current.value), //inputTipoId.current.value,
 			identificacion: inputId.current.value,
 			rol: saberRol(inputRol.current.value),
 			genero: sexo,
 			fecha_nacimiento: inputFecha.current.value
 		}
-		console.log(newUser)
-		console.log(inputReContra.current.value)
-		console.log(inputReContra.current.value)
 
 		if(inputContra.current.value != inputReContra.current.value) {
 			setAlert({
@@ -64,7 +68,6 @@ export default function Index() {
 			})
 			return
 		} 
-
 
 		const mssg = await createUser(newUser)
 		setAlert({
@@ -87,7 +90,7 @@ export default function Index() {
 			<Navbar />
 			{ alert.titulo.length > 1 && <Alert titulo={alert.titulo} cuerpo={alert.cuerpo} color={alert.color}/>} 
 
-			<div className='flex flex-col mx-auto my-20 max-w-md px-4 py-8 shadow bg-white rounded-lg shadow-smrk:bg-gray-800 sm:px-6 md:px-8 lg:px-10'>
+			<div className='flex flex-col mx-auto my-20 max-w-md lg:max-w-lg px-4 py-8 shadow bg-white rounded-lg shadow-smrk:bg-gray-800 sm:px-6 md:px-8 lg:px-10'>
 				<div className='self-center mb-2 text-xl font-bold text-gray-800 sm:text-2xl dark:text-white'>
 					Crear nuevo usuario
 				</div>
@@ -169,10 +172,11 @@ export default function Index() {
 										ref={inputTipoId}
 										className='block appearance-none w-full bg-gray-100 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500'
 									>
-										<option>C.C.</option>
+										{tipoid?.map( ({id, nombre})=> <option key={id}>{nombre}</option>)}
+										{/* <option>C.C.</option>
 										<option>T.I.</option>
 										<option>C.E.</option>
-										<option>NIUP</option>
+										<option>NIUP</option> */}
 									</select>
 									<div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700'>
 										<svg

@@ -9,6 +9,7 @@ import Index from './pages/Index'
 import Login from './pages/Login'
 import VerUsuarios from './pages/VerUsuarios'
 import Pruebas from './pages/Pruebas'
+import Grupos from './pages/Grupos'
 
 import { AuthProvider } from './context/authContext'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -32,6 +33,11 @@ const router = createBrowserRouter([
 		path: '/login',
 		element: <UnprotectedRoute><Login /></UnprotectedRoute>,
 	},
+	{
+		path: '/grupos',
+		element: <ProtectedRoute><Grupos /></ProtectedRoute>
+	},
+
 ])
 
 ReactDOM.createRoot(document.getElementById('root')).render(
