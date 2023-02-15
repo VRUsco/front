@@ -32,21 +32,24 @@ export default function Modal({ estadoModal }) {
 								<div className='relative p-6 flex-auto'>
 									<ul>
 										{estadoModal?.map(({ fecha_hora, tipo_error }, i) => {
-											
 											let fechaNuevaString = new Date(fecha_hora)
 											fechaNuevaString = fechaNuevaString.toLocaleDateString()
 											const horasFecha =
 												new Date(fecha_hora).getMinutes() < 10
 													? `0${new Date(fecha_hora).getMinutes()}`
 													: new Date(fecha_hora).getMinutes()
-											
+
+											const segundosFecha =
+												new Date(fecha_hora).getSeconds() < 10
+													? `0${new Date(fecha_hora).getSeconds()}`
+													: new Date(fecha_hora).getSeconds()
 
 											const fechaNuevaHoras = ` ${new Date(
 												fecha_hora
-											).getHours()}:${horasFecha}`
+											).getHours()}:${horasFecha}:`
 
-											const fechaCompleta = fechaNuevaString + fechaNuevaHoras
-											
+											const fechaCompleta = fechaNuevaString + fechaNuevaHoras + segundosFecha
+ 
 											return (
 												<li key={i} className='mb-4'>
 													<p className=''>{fechaCompleta}</p>

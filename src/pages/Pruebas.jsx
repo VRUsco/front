@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { createLogger } from 'vite'
 import Modal from '../components/Modal'
 import Navbar from '../components/Navbar'
 import { useAuth } from '../context/authContext'
@@ -69,7 +68,7 @@ const Pruebas = () => {
 
 											const fechaNuevaHoras = ` ${new Date(
 												fecha_hora
-											).getHours()}:${horasFecha}:`
+											).getHours()}:${horasFecha}`
 
 											const fechaCompleta = fechaNuevaString + fechaNuevaHoras
 
