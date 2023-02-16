@@ -4,15 +4,17 @@ import { Link, useNavigate } from 'react-router-dom'
 
 const Navbar = () => {
 	const { user, setUser } = useAuth()
+	// Obtenemos el estado del usuario definido en el contexto
+
 	const navigate = useNavigate()
-	const [navbarStatus, setNavbarStatus] = useState(false)
+	const [navbarStatus, setNavbarStatus] = useState(false) // Definimos estado que maneja si la barra de navegación está abierta o cerrada (movil)
 
 	const clickMenu = () => {
-		setNavbarStatus(!navbarStatus)
-	}
+		setNavbarStatus(!navbarStatus) // Estado que maneja si la barra de navegación está abierta o cerrada (movil)
+	} 
 	const handleLogout = () => {
-		setUser(undefined)
-		navigate('/login')
+		setUser(undefined) // cerramos sesión
+		navigate('/login') // Navegamos al login
 	}
 
 	return (

@@ -3,11 +3,15 @@ import { useAuth } from '../context/authContext'
 
 export default function Modal({ estadoModal }) {
 	const { modal, setModal } = useAuth()
+	// Obtenemos el estado definido en el contexto y su SET para cambiar el estado cuando cerremos el modal
+
 	const [showModal, setShowModal] = useState(true)
+	// Creamos un estado local para manejar el estado del modal
 
 	useEffect(() => {
 		setShowModal(!showModal)
 	}, [modal])
+	// Cada vez que el estado 'modal' cambie, el efecto cambia y ejecuta la función que invierte el estado local del estado.
 
 	return (
 		<div className=''>
@@ -51,7 +55,7 @@ export default function Modal({ estadoModal }) {
 											const fechaCompleta = fechaNuevaString + fechaNuevaHoras + segundosFecha
  
 											return (
-												<li key={i} className='mb-4'>
+												<li key={i} className='mb-4 pl-2 border border-b-0 border-l-2 border-l-red-400 border-t-0 border-r-0'>
 													<p className=''>{fechaCompleta}</p>
 													<p>{tipo_error}</p>
 												</li>

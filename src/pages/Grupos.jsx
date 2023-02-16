@@ -4,16 +4,18 @@ import { useAuth } from '../context/authContext'
 
 const Grupos = () => {
 	const { createGrupo, getGrupos, grupos } = useAuth()
+	// TRAEMOS DEL CONTEXTO LA FUNCIÓN DE TRAER GRUPOS, DE CREAR GRUPOS Y DE VER LOS GRUPOS 
 
 	useEffect(() => {
 		getGrupos()
 	}, [grupos])
+	// CUANDO CAMBIE 'grupos' EL COMPONENTE SE VUELVE A RENDERIZAR
 
 	const [alert, setAlert] = useState({
 		titulo: '',
 		cuerpo: '',
 		color: '',
-	})
+	}) // CREACIÓN DEL ESTADO INICIAL DEL ALERT
 
 	const inputNombre = useRef(null)
 	const inputDescripcion = useRef(null)
@@ -29,7 +31,7 @@ const Grupos = () => {
 			10000
 		)
 		clearTimeout(t)
-	}, [alert])
+	}, [alert]) // EFECTO QUE CADA 10s BORRA EL ALERT (SI EXISTE)
 
 	const handleSubmit = async e => {
 		e.preventDefault()
@@ -49,8 +51,7 @@ const Grupos = () => {
 		inputDescripcion.current.value = ''
 	}
 
-	/* if(loading) return <Loading /> */
-	if (!grupos) return <div> No encuentro nada bro...</div>
+	if (!grupos) return <div> No encuentro nada...</div>
 
 	return (
 		<>

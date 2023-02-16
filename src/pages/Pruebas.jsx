@@ -5,19 +5,29 @@ import { useAuth } from '../context/authContext'
 
 const Pruebas = () => {
 	const { getPruebas, pruebas, getErrores, setModal } = useAuth()
-	const [errorMssg, setErrorMssg] = useState(['No hay errores por mostrar.'])
+	// TRAEMOS DEL CONTEXTO LA FUNCIÓN DE TRAER PRUEBAS, TRAER ERROES, EL ESTADO DONDE SE ALMACENAN LAS PRUEBAS Y EL ESTADO GLOBAL DEL MODAL
+
+	const [errorMssg, setErrorMssg] = useState(['No hay errores por mostrar.']) // Estado local de errores
 
 	const showErrores = async id => {
-		const mssg = await getErrores(id)
-		mssg && setErrorMssg(mssg.Errores)
-		setModal(true)
+		const mssg = await getErrores(id) // Traemos los errores pasandole el id de la prueba
+		mssg && setErrorMssg(mssg.Errores) // Si tiene errores los almacenamos en el estado local de errores
+		setModal(true) // Abrimos el modal
 	}
 
 	useEffect(() => {
 		getPruebas()
-	}, [])
+	}, []) // Traemos todas las pruebas al renderizar el componente
 
-	if (!pruebas) return <div> No encuentro nada bro...</div>
+	if (!pruebas)
+		return (
+			<>
+				<Navbar />
+				<p className='mt-12 w-full text-center font-semibold text-2xl'>
+					No encuentro nada bro...
+				</p>
+			</>
+		)
 
 	return (
 		<>
@@ -40,13 +50,19 @@ const Pruebas = () => {
 											scope='col'
 											className='px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200'
 										>
-											Auxiliar
+											ID Auxiliar
 										</th>
 										<th
 											scope='col'
 											className='px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200'
 										>
-											Usuario
+											ID Usuario
+										</th>
+										<th
+											scope='col'
+											className='px-5 py-3 text-sm font-normal text-left text-gray-800 uppercase bg-white border-b border-gray-200'
+										>
+											Grupo
 										</th>
 										<th
 											scope='col'
@@ -58,7 +74,7 @@ const Pruebas = () => {
 								</thead>
 								<tbody>
 									{pruebas.map(
-										({ id, auxiliar, fecha_hora, usuario, nivel }) => {
+										({ id, auxiliar, fecha_hora, usuario, nivel, grupo }) => {
 											let fechaNuevaString = new Date(fecha_hora) //.getHours()
 											fechaNuevaString = fechaNuevaString.toLocaleDateString()
 											const horasFecha =
@@ -95,6 +111,11 @@ const Pruebas = () => {
 													<td className='px-5 py-5 text-sm bg-white border-b border-gray-200'>
 														<p className='text-gray-900 whitespace-no-wrap'>
 															{usuario}
+														</p>
+													</td>
+													<td className='px-5 py-5 text-sm bg-white border-b border-gray-200'>
+														<p className='text-gray-900 whitespace-no-wrap'>
+															{grupo}
 														</p>
 													</td>
 													<td className='px-5 py-5 text-sm bg-white border-b border-gray-200'>

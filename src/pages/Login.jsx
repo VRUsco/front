@@ -1,20 +1,22 @@
-import { useState, useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/authContext'
 import Alert from '../components/Alert'
-import md5 from 'md5'
 
 const Login = () => {
+	/* CREACIÓN DE TODAS LAS REFERENCIAS DE LOS INPUTS */
 	const inputId = useRef()
 	const inputPassword = useRef()
 	const navigate = useNavigate()
 
 	const { login, user, error } = useAuth()
+	// TRAEMOS DEL CONTEXTO EL USUARIO ACTUAL, LA FUNCION DE LOGIN Y SI HAY ERROR
 
 	const handleSubmit = e => {
 		e.preventDefault()
 		login(inputId.current.value, inputPassword.current.value)
-		if (user) {
+
+		if (user) { // SI DESPUÉS DE HACER EL LOGIN SE GUARDA UN USUARIO CORRECTAMENTE, SE REDIRIGE
 			navigate('/')
 		}
 	}

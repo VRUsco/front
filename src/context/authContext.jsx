@@ -1,23 +1,24 @@
-import { useState, createContext, useContext, useEffect } from 'react'
-
-import md5 from 'md5'
+import { useState, createContext, useContext } from 'react'
 
 const authContext = createContext()
-///10987654
+
 export function AuthProvider({ children }) {
 	const [user, setUser] = useState()
 	const [users, setUsers] = useState()
 	const [grupos, setGrupos] = useState()
 	const [tipoid, setTipoid] = useState()
 	const [pruebas, setPruebas] = useState()
-/* 	const [loading, setLoading] = useState(false)
- */	const [error, setError] = useState()
- 	const [modal, setModal] = useState()
+	const [error, setError] = useState()
+	const [modal, setModal] = useState()
+
+	const urlServer = 'http://172.16.79.188:5000'
+	/* TODO: manejar correctamente los errores */
+
+	/* AQUÍ SE ENCUENTRAN TODAS LAS POSIBLES PETICIONES QUE SE PUEDEN HACER AL BACKEND A TRAVÉS DE FETCH. EL NOMBRE DESCRIBE LO QUE HACE CADA FUNCIÓN */
 
 	const login = async (userId, userPassword) => {
-		/* setLoading(true) */
 		try {
-			const userRaw = await fetch(`http://172.16.79.188:5000/validation`, {
+			const userRaw = await fetch(`${urlServer}/validation`, {
 				method: 'POST',
 				mode: 'cors',
 				headers: {
@@ -31,9 +32,9 @@ export function AuthProvider({ children }) {
 			if (userIncoming.status != 'OK') {
 				console.error('Error al iniciar sesión: ', userIncoming?.message)
 				setError({
-					titulo: "Error al iniciar sesión",
+					titulo: 'Error al iniciar sesión',
 					cuerpo: userIncoming?.message,
-					color: "rojo",
+					color: 'rojo',
 				})
 				return
 			}
@@ -42,9 +43,9 @@ export function AuthProvider({ children }) {
 			if (userIncoming.usuario.rol == 'usuario') {
 				console.error('Error al iniciar sesión: ', userIncoming?.message)
 				setError({
-					titulo: "Error al iniciar sesión",
+					titulo: 'Error al iniciar sesión',
 					cuerpo: userIncoming?.message || 'Debes ser administrador/auxiliar.',
-					color: "rojo",
+					color: 'rojo',
 				})
 				return
 			}
@@ -52,18 +53,15 @@ export function AuthProvider({ children }) {
 		} catch (e) {
 			console.log('Entra al catch')
 			console.error(e)
-			console.log(user)
 		}
-		/* setLoading(false) */
 	}
 	const getUsers = async () => {
-		/* setLoading(true) */
 		try {
-			const usersRaw = await fetch(`http://172.16.79.188:5000/usuario`)
+			const usersRaw = await fetch(`${urlServer}/usuario`)
 			const usersIncoming = await usersRaw.json()
 			if (usersIncoming.status != 'OK') {
 				console.error('Traer los usuarios', usersIncoming?.message)
-				/* setLoading(false) */
+
 				return
 			}
 			setUsers(usersIncoming.usuarios)
@@ -71,12 +69,10 @@ export function AuthProvider({ children }) {
 			console.log('Entra al catch')
 			console.error(e)
 		}
-		/* setLoading(false) */
 	}
 	const createUser = async userData => {
-		/* setLoading(true) */
 		try {
-			const usersRaw = await fetch(`http://172.16.79.188:5000/usuario`,{
+			const usersRaw = await fetch(`${urlServer}/usuario`, {
 				method: 'POST',
 				mode: 'cors',
 				headers: {
@@ -88,11 +84,11 @@ export function AuthProvider({ children }) {
 			if (response.status != 'OK') {
 				console.error('Error al crear usuario: ', userIncoming?.message)
 				setError({
-					titulo: "Error al crear usuario:",
+					titulo: 'Error al crear usuario:',
 					cuerpo: userIncoming?.message,
-					color: "rojo",
+					color: 'rojo',
 				})
-				/* setLoading(false) */
+
 				return
 			}
 			console.log(response)
@@ -101,16 +97,14 @@ export function AuthProvider({ children }) {
 			console.log('Entra al catch')
 			console.error(e)
 		}
-		/* setLoading(false) */
 	}
 	const getPruebas = async () => {
-		/* setLoading(true) */
 		try {
-			const pruebasRaw = await fetch(`http://172.16.79.188:5000/pruebas`)
+			const pruebasRaw = await fetch(`${urlServer}/pruebas`)
 			const pruebasIncoming = await pruebasRaw.json()
 			if (pruebasIncoming.status != 'OK') {
 				console.error('Traer las pruebas: ', pruebasIncoming?.message)
-				/* setLoading(false) */
+
 				return
 			}
 			setPruebas(pruebasIncoming.pruebas)
@@ -118,59 +112,31 @@ export function AuthProvider({ children }) {
 			console.log('Entra al catch')
 			console.error(e)
 		}
-		/* setLoading(false) */
 	}
 	const getTipoId = async () => {
-		/* setLoading(true) */
 		try {
-			const tiposRAW = await fetch(`http://172.16.79.188:5000/tipo_identificacion`)
+			const tiposRAW = await fetch(
+				`${urlServer}/tipo_identificacion`
+			)
 			const tiposIncoming = await tiposRAW.json()
 			if (tiposIncoming.status != 'OK') {
 				console.error('Traer los tipos de id: ', tiposIncoming?.message)
-				/* setLoading(false) */
+
 				return
 			}
 			setTipoid(tiposIncoming.tipo)
-			
 		} catch (e) {
 			console.log('Entra al catch')
 			console.error(e)
 		}
-		/* setLoading(false) */
-	}
-	const deleteUser = async userToDelete => {
-		/* setLoading(true) */
-		try {
-			const tiposRAW = await fetch(`http://172.16.79.188:5000/`, {
-				method: 'POST',
-				mode: 'cors',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ usuario: user.id, borrando: userToDelete}),
-			})
-			const borrado = await tiposRAW.json()
-			if (tiposIncoming.status != 'OK') {
-				console.error('Error al borrar: ', tiposIncoming?.message)
-				/* setLoading(false) */
-				return
-			}
-			return 'Borrado exitosamente'
-			
-		} catch (e) {
-			console.log('Entra al catch')
-			console.error(e)
-		}
-		/* setLoading(false) */
 	}
 	const getGrupos = async () => {
-		/* setLoading(true) */
 		try {
-			const gruposRAW = await fetch(`http://172.16.79.188:5000/grupos`)
+			const gruposRAW = await fetch(`${urlServer}/grupos`)
 			const gruposIncoming = await gruposRAW.json()
 			if (gruposIncoming.status != 'OK') {
 				console.error('Traer los grupos: ', gruposIncoming?.message)
-				/* setLoading(false) */
+
 				return
 			}
 			setGrupos(gruposIncoming.grupos)
@@ -178,12 +144,10 @@ export function AuthProvider({ children }) {
 			console.log('Entra al catch')
 			console.error(e)
 		}
-		/* setLoading(false) */
 	}
 	const createGrupo = async groupData => {
-		/* setLoading(true) */
 		try {
-			const gruposRAW = await fetch(`http://172.16.79.188:5000/grupos`,{
+			const gruposRAW = await fetch(`${urlServer}/grupos`, {
 				method: 'POST',
 				mode: 'cors',
 				headers: {
@@ -194,20 +158,21 @@ export function AuthProvider({ children }) {
 			const gruposIncoming = await gruposRAW.json()
 			if (gruposIncoming.status != 'OK') {
 				console.error('Traer los grupos: ', gruposIncoming?.message)
-				/* setLoading(false) */
+
 				return
 			}
-			if(grupos) getGrupos()
+			if (grupos) getGrupos()
 			setPruebas(gruposIncoming.grupos)
 		} catch (e) {
 			console.log('Entra al catch')
 			console.error(e)
 		}
-		/* setLoading(false) */
 	}
-	const getErrores = async pruebaid =>{
+	const getErrores = async pruebaid => {
 		try {
-			const erroresRAW = await fetch(`http://172.16.79.188:5000/errores:${pruebaid}`)
+			const erroresRAW = await fetch(
+				`${urlServer}/errores:${pruebaid}`
+			)
 			const erroresIncoming = await erroresRAW.json()
 			if (erroresIncoming.status != 'OK') {
 				console.error('Traer los errores: ', erroresIncoming?.message)
@@ -222,12 +187,31 @@ export function AuthProvider({ children }) {
 
 	return (
 		<authContext.Provider
-			value={{ login, user, setUser, users, getUsers, error, createUser, getPruebas, pruebas, tipoid, getTipoId, getGrupos, grupos, createGrupo, getErrores, modal, setModal }}
+			value={{
+				login,
+				user,
+				setUser,
+				users,
+				getUsers,
+				error,
+				createUser,
+				getPruebas,
+				pruebas,
+				tipoid,
+				getTipoId,
+				getGrupos,
+				grupos,
+				createGrupo,
+				getErrores,
+				modal,
+				setModal,
+			}} // AQUÍ SE EXPORTAN TODAS LAS FUNCIONES PARA QUE PUEDAN SER ACCEDIDAS DESDE CUALQUIER PUNTO DE LA APP
 		>
 			{children}
 		</authContext.Provider>
 	)
 }
+
 export const useAuth = () => {
 	const context = useContext(authContext)
 	if (!context) throw new Error('No hay un auth provider.')

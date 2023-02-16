@@ -1,16 +1,20 @@
 import { useRef, useState, useEffect } from 'react'
 import { useAuth } from '../context/authContext'
 import Navbar from '../components/Navbar'
-import md5 from 'md5'
 import Alert from '../components/Alert'
+
 export default function Index() {
 	const [ alert, setAlert ] = useState({
 		titulo: '',
 		cuerpo: '',
 		color:''
-	})
-	const { createUser, getTipoId, tipoid } = useAuth()
-	const form = useRef()
+	}) // CREACIÓN DEL ESTADO INICIAL DEL ALERT
+
+	const { user, createUser, getTipoId, tipoid } = useAuth()
+	// TRAEMOS DEL CONTEXTO EL USUARIO ACTUAL, LA FUNCION DE CREAR ESTADO, LA DE TRAER TIPOS DE ID Y TRAEMOS LOS TIPOS DEL ESTADO CON TIPOID
+
+
+	/* CREACIÓN DE TODAS LAS REFERENCIAS DE LOS INPUTS */
 	const inputNombres = useRef(null)
 	const inputApellidos = useRef(null)
 	const inputContra = useRef(null)
@@ -21,6 +25,18 @@ export default function Index() {
 	const inputSexoF = useRef(null)
 	const inputFecha = useRef(null)
 
+	const limpiarInputs = () =>{
+		inputNombres.current.value = ''
+		inputApellidos.current.value = ''
+		inputContra.current.value = ''
+		inputReContra.current.value = ''
+		inputTipoId.current.value = ''
+		inputId.current.value = ''
+		inputRol.current.value = ''
+		inputSexoF.current.value = ''
+		inputFecha.current.value = ''
+	}
+
 	useEffect(()=>{
 		const t = setTimeout(()=> setAlert({
 			titulo: '',
@@ -28,11 +44,11 @@ export default function Index() {
 			color:''
 		}), 10000)
 		clearTimeout(t)
-	}, [alert])
+	}, [alert])// EFECTO QUE CADA 10s BORRA EL ALERT (SI EXISTE)
 
 	useEffect(()=>{
 		getTipoId()
-	}, [])
+	}, []) // TRAEMOS TODOS LOS TIPOS DE IDs AL RENDERIZAR POR PRIMERA VEZ
 
 	const handleSubmit = async e => {
 		e.preventDefault()
@@ -68,22 +84,35 @@ export default function Index() {
 			})
 			return
 		} 
+		
+		/* SI QUIERE CREAR ADMIN Y NO ES ADMIN */
+		if(inputRol.current.value == 'Administrador' & user.rol != 'administrador'){
+			setAlert({
+				titulo: 'Error',
+				cuerpo: 'Un administrador solo puede ser creado por otro administrador',
+				color:	'red'
+			})
+			return 
+		}
+
+		/* SI QUIERE CREAR AUXILIAR Y NO ES ADMIN */
+		if(inputRol.current.value == 'Auxiliar' & user.rol != 'administrador'){
+			setAlert({
+				titulo: 'Error',
+				cuerpo: 'Un auxiliar solo puede ser creado por un administrador',
+				color:	'red'
+			})
+			return 
+		}
 
 		const mssg = await createUser(newUser)
 		setAlert({
 			titulo: mssg,
-			cuerpo: 'El usuario fue creado con éxito',
+			cuerpo: 'El usuario fue creado con correctamente',
 			color:'green'
 		})
-		inputNombres.current.value = ''
-		inputApellidos.current.value = ''
-		inputContra.current.value = ''
-		inputReContra.current.value = ''
-		inputTipoId.current.value = ''
-		inputId.current.value = ''
-		inputRol.current.value = ''
-		inputSexoF.current.value = ''
-		inputFecha.current.value = ''
+
+		limpiarInputs()
 	}
 	return (
 		<>
@@ -96,7 +125,7 @@ export default function Index() {
 				</div>
 
 				<div className='p-6 mt-2'>
-					<form ref={form} onSubmit={handleSubmit}>
+					<form onSubmit={handleSubmit}>
 						<div className='flex flex-wrap -mx-3'>
 							<div className='w-full md:w-1/2 px-3 mb-6 md:mb-0'>
 								<label

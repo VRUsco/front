@@ -5,26 +5,18 @@ import Navbar from '../components/Navbar'
 import { useAuth } from '../context/authContext'
 
 const VerUsuarios = () => {
-	const { loading, getUsers, users } = useAuth()
-	const [usersConFecha, setUsersConFecha] = useState()
+	const { getUsers, users } = useAuth()
+	// TRAEMOS DEL CONTEXTO LA FUNCIÓN DE TRAER USUARIOS Y EL ESTADO DONDE SE ALMACENAN LOS USUARIOS
 
 	useEffect(() => {
 		getUsers()
-	}, [])
-
-	const handleDelete = id => {
-		const res = confirm('Seguro que deseas eliminar este chamito?')
-		//res ? alert('Ok, lo borro...') : alert('Mejor, porque no sé borrar.')
-		res ? alert('Ok, lo borro...') : alert('Mejor, porque no sé borrar.')
-	}
+	}, []) // Traemos todos los usuarios al renderizar el componente
 
 	if (!users)
 		return (
 			<>
-				{' '}
-				<Navbar />{' '}
+				<Navbar />
 				<p className='mt-12 w-full text-center font-semibold text-2xl'>
-					{' '}
 					No encuentro nada bro...
 				</p>
 			</>
@@ -44,13 +36,13 @@ const VerUsuarios = () => {
 											scope='col'
 											className='px-5 py-3 text-sm font-normal text-gray-800 uppercase bg-white border-b border-gray-200'
 										>
-											Nombres
+											Nombre
 										</th>
 										<th
 											scope='col'
 											className='px-5 py-3 text-sm font-normal text-gray-800 uppercase bg-white border-b border-gray-200'
 										>
-											Apellidos
+											# documento
 										</th>
 										<th
 											scope='col'
@@ -64,12 +56,18 @@ const VerUsuarios = () => {
 										>
 											Rol
 										</th>
-										
 									</tr>
 								</thead>
 								<tbody>
 									{users.map(
-										({ apellido, fecha_nacimiento, nombre, id, rol }) => {
+										({
+											apellido,
+											fecha_nacimiento,
+											nombre,
+											id,
+											identificacion,
+											rol,
+										}) => {
 											let fechaNueva = new Date(fecha_nacimiento)
 											fechaNueva = fechaNueva.toLocaleDateString()
 											const colorSpanName = () => {
@@ -77,16 +75,17 @@ const VerUsuarios = () => {
 												if (rol == 'auxiliar') return 'bg-amber-200'
 												if (rol == 'administrador') return 'bg-red-200'
 											}
+
 											return (
 												<tr key={id}>
 													<td className='px-5 py-5 text-sm bg-white border-b border-gray-200'>
 														<p className='text-gray-900 whitespace-no-wrap'>
-															{nombre}
+															{`${nombre} ${apellido}`}
 														</p>
 													</td>
 													<td className='px-5 py-5 text-sm bg-white border-b border-gray-200'>
 														<p className='text-gray-900 whitespace-no-wrap'>
-															{apellido}
+															{identificacion}
 														</p>
 													</td>
 													<td className='px-5 py-5 text-sm bg-white border-b border-gray-200'>
